@@ -25,6 +25,24 @@ const login = async (req, res) => {
     }
 };
 
+const createUser = async (req, res) => {
+    const { email, password, displayName, image } = req.body;
+    const user = await userService.getUserByEmail(email);
+    if (user) {
+        return res.status(409).json({ message: 'User already registered' });
+    }
+    
+    const newUser = await userService.createUser({ email, password, displayName, image });
+    if (newUser.type) {
+        return res.status(400).json({ message: newUser.message });
+    }
+    
+    const { password: _, ...userWithoutPassowrd } = newUser.dataValues;
+    const token = createToken(userWithoutPassowrd);
+    return res.status(201).json({ token });
+};
+
 module.exports = {
     login,
+    createUser,
 };
