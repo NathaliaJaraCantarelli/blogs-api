@@ -21,28 +21,42 @@ const login = async (req, res) => {
 
         res.status(200).json({ token });
     } catch (err) {
-        res.status(500).json({ message: 'Erro ao salvar o usuário no banco', error: err.message });
+        res.status(500).json({ message: err.message });
     }
 };
 
 const createUser = async (req, res) => {
-    const { email, password, displayName, image } = req.body;
-    const user = await userService.getUserByEmail(email);
-    if (user) {
-        return res.status(409).json({ message: 'User already registered' });
+    try {
+        const { email, password, displayName, image } = req.body;
+        const user = await userService.getUserByEmail(email);
+        if (user) {
+            return res.status(409).json({ message: 'User already registered' });
+        }
+
+        const newUser = await userService.createUser({ email, password, displayName, image });
+        if (newUser.type) {
+            return res.status(400).json({ message: newUser.message });
+        }
+
+        const { password: _, ...userWithoutPassowrd } = newUser.dataValues;
+        const token = createToken(userWithoutPassowrd);
+        return res.status(201).json({ token });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
     }
-    
-    const newUser = await userService.createUser({ email, password, displayName, image });
-    if (newUser.type) {
-        return res.status(400).json({ message: newUser.message });
+};
+
+const getUsers = async (_req, res) => {
+    try {
+        const users = await userService.getUsers();
+        return res.status(200).json(users);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
     }
-    
-    const { password: _, ...userWithoutPassowrd } = newUser.dataValues;
-    const token = createToken(userWithoutPassowrd);
-    return res.status(201).json({ token });
 };
 
 module.exports = {
     login,
     createUser,
+    getUsers,
 };
