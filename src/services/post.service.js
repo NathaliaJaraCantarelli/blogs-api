@@ -6,12 +6,12 @@ const env = process.env.NODE_ENV || 'development';
 
 const sequelize = new Sequelize(config[env]);
 
-const createPost = async ({ title, content, categoryIds }, userId) => {
+const createPost = async ({ title, content, categoryIds }) => {
     const result = await sequelize.transaction(async (t) => {
         const post = await BlogPost.create({
             title,
             content,
-            userId,
+            userId: 1,
             updated: Date.now(),
             published: Date.now(),
         },
