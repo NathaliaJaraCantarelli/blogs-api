@@ -6,8 +6,11 @@ const findCategoryByName = async (name) => Category.findOne({ where: { name } })
 
 const findAllCategories = async () => Category.findAll();
 
+const findAllById = async (id) => Category.findAll({ where: { id } });
+
 module.exports = {
     createCategory,
     findCategoryByName,
     findAllCategories,
+    findAllById,
 };
