@@ -16,4 +16,6 @@ router.post(
 
 router.get('/', verifyAuthToken, createPostController.getPost);
 
+router.get('/:id', verifyAuthToken, createPostController.getPostId);
+
 module.exports = router;

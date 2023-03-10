@@ -1,5 +1,13 @@
 const { postService } = require('../services');
-// const { findAllById } = require('../services/category.service');
+
+const categories = (posts) => {
+    const result = posts.map((post) => {
+        const { dataValues } = post;
+        dataValues.categories = dataValues.Categories;
+        return post;
+    });
+    return result;
+};
 
 const createPost = async (req, res) => {
     try {
@@ -14,15 +22,21 @@ const createPost = async (req, res) => {
 
 const getPost = async (_req, res) => {
     const posts = await postService.getAll();
-    const result = await Promise.all(posts.map((post) => {
-        const { dataValues } = post;
-        dataValues.categories = dataValues.Categories;
-        return post;
-    }));
+    const result = categories(posts);
+    return res.status(200).json(result);
+};
+
+const getPostId = async (req, res) => {
+    const { id } = req.params;
+    const posts = await postService.getAll();
+    const exists = posts.find((post) => post.dataValues.id === Number(id));
+    if (!exists) return res.status(404).json({ message: 'Post does not exist' });
+    const [result] = categories(posts);
     return res.status(200).json(result);
 };
 
 module.exports = {
     createPost,
     getPost,
+    getPostId,
 };
