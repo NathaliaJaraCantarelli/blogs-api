@@ -2,7 +2,8 @@ const { postService } = require('../services');
 
 const createPost = async (req, res) => {
     try {
-        const { type, message } = await postService.createPost(req.body);
+        const { id } = req.data;
+        const { type, message } = await postService.createPost(req.body, id);
         if (type) return res.status(type).json(message);
         return res.status(201).json(message);
     } catch (error) {
