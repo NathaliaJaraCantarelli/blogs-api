@@ -13,14 +13,13 @@ const createPost = async (req, res) => {
 };
 
 const getPost = async (_req, res) => {
-    // const posts = await postService.getAll();
-    // const result = await Promise.all(posts.map((post) => {
-    //     post.dataValues.categories = post.dataValues.Categories;
-    //     return post;
-    // }))
-    // return res.status(200).json(result);
-    const result = await postService.getAll();
+    const posts = await postService.getAll();
+    const result = await Promise.all(posts.map((post) => {
+        post.dataValues.categories = post.dataValues.Categories;
+        return post;
+    }))
     return res.status(200).json(result);
+    
 };
 
 module.exports = {

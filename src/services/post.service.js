@@ -33,7 +33,6 @@ const getAll = async () => BlogPost.findAll({ include: [
         },
         {
             model: Category,
-            as: 'categories',
             through: { attributes: [] },
         },
     ],
