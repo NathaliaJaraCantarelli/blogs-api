@@ -16,6 +16,8 @@ router.post(
 
 router.get('/', verifyAuthToken, createPostController.getPost);
 
+router.get('/search', verifyAuthToken, createPostController.searchPost);
+
 router.get('/:id', verifyAuthToken, createPostController.getPostId);
 
 router.put('/:id', verifyAuthToken, verifyFields, createPostController.putPostId);
