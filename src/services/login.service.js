@@ -11,9 +11,12 @@ const getUserById = async (id) => User.findOne({
     attributes: { exclude: 'password' },
 });
 
+const deleteUser = async (id) => User.destroy({ where: { id } });
+
 module.exports = {
     getUserByEmail,
     createUser,
     getUsers,
     getUserById,
+    deleteUser,
 };

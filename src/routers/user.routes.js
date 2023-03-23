@@ -11,4 +11,6 @@ router.get('/:id', verifyAuthToken, createUserController.getUserById);
 
 router.post('/', verifyUser, createUserController.createUser);
 
+router.delete('/me', verifyAuthToken, createUserController.deleteUser);
+
 module.exports = router;
