@@ -20,4 +20,6 @@ router.get('/:id', verifyAuthToken, createPostController.getPostId);
 
 router.put('/:id', verifyAuthToken, verifyFields, createPostController.putPostId);
 
+router.delete('/:id', verifyAuthToken, createPostController.deletePost);
+
 module.exports = router;

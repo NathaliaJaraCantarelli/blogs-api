@@ -56,9 +56,12 @@ const getAById = async (id) => BlogPost.findByPk(id, { include: [
 const putPost = async (contentPost, id) => BlogPost
     .update(contentPost, { where: { id } });
 
+const deletePost = async (id) => BlogPost.destroy({ where: { id } });
+
 module.exports = {
     createPost,
     getAll,
     putPost,
     getAById,
+    deletePost,
 };
