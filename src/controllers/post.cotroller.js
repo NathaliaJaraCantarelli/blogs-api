@@ -1,14 +1,5 @@
 const { postService } = require('../services');
 
-const categories = (posts) => {
-    const result = posts.map((post) => {
-        const { dataValues } = post;
-        dataValues.categories = dataValues.Categories;
-        return post;
-    });
-    return result;
-};
-
 const createPost = async (req, res) => {
     try {
         const { id } = req.data;
@@ -22,8 +13,7 @@ const createPost = async (req, res) => {
 
 const getPost = async (_req, res) => {
     const posts = await postService.getAll();
-    const result = categories(posts);
-    return res.status(200).json(result);
+    return res.status(200).json(posts);
 };
 
 const getPostId = async (req, res) => {
@@ -31,12 +21,29 @@ const getPostId = async (req, res) => {
     const posts = await postService.getAll();
     const exists = posts.find((post) => post.dataValues.id === Number(id));
     if (!exists) return res.status(404).json({ message: 'Post does not exist' });
-    const [result] = categories(posts);
-    return res.status(200).json(result);
+    return res.status(200).json(exists);
+};
+
+const putPostId = async (req, res) => {
+    const { id } = req.params;
+    const { id: idUser } = req.data;
+    const { title, content } = req.body;
+
+    const { dataValues } = await postService.getAById(id);
+
+    if (!dataValues) return res.status(404).json({ message: 'Post does not exist' });
+    
+    if (dataValues.userId !== idUser) return res.status(401).json({ message: 'Unauthorized user' });
+
+    await postService.putPost({ title, content }, dataValues.userId);
+    const updated = await postService.getAById(id);
+
+    return res.status(200).json(updated);
 };
 
 module.exports = {
     createPost,
     getPost,
     getPostId,
+    putPostId,
 };

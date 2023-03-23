@@ -33,12 +33,32 @@ const getAll = async () => BlogPost.findAll({ include: [
         },
         {
             model: Category,
+            as: 'categories',
             through: { attributes: [] },
         },
     ],
 });
 
+const getAById = async (id) => BlogPost.findByPk(id, { include: [
+    {
+        model: User,
+        as: 'user',
+        attributes: { exclude: 'password' },
+    },
+    {
+        model: Category,
+        as: 'categories',
+        through: { attributes: [] },
+    },
+],
+});
+
+const putPost = async (contentPost, id) => BlogPost
+    .update(contentPost, { where: { id } });
+
 module.exports = {
     createPost,
     getAll,
+    putPost,
+    getAById,
 };
